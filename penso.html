@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>레벨테스트 결과 생성기ㅌ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <!-- 입력 -->
+  <div class="panel no-print">
+    <h2>레벨테스트 입력</h2>
+
+    <div class="row">
+      <input id="studentName" placeholder="학생 이름">
+      <input id="studentClass" placeholder="학년/반">
+      <input id="testDate" type="date">
+      <input id="maxScore" type="number" value="100" min="1" title="리포트 상단 총점 표기용(원하면 사용)">
+    </div>
+
+    <table id="qTable">
+      <thead>
+        <tr>
+          <th style="width:70px;">문항</th>
+          <th style="width:120px;">배점</th>
+          <th style="width:120px;">득점</th>
+          <th style="width:180px;">카테고리</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="row2">
+      <textarea id="commentOverall" placeholder="종합평가"></textarea>
+    </div>
+
+    <div class="btn-area">
+      <button id="btnCalc">결과보기</button>
+      <button id="btnPrint">인쇄</button>
+      <button id="btnReset">초기화</button>
+    </div>
+  </div>
+
+  <!-- 결과 -->
+  <div class="panel" id="reportArea">
+    <div class="report-header">
+      <div>
+        <h2>레벨테스트 결과 리포트</h2>
+        <div id="meta" class="meta"></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-item">
+          <div class="kpi-label">총점</div>
+          <div class="kpi-value" id="totalScoreTxt">0 / 0</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-label">Class</div>
+          <div class="kpi-value"><span id="percentTxt">0</span></div>
+        </div>
+      </div>
+
+    </div>
+      <div class="panel compare-panel">
+        <h3>문항분석 (4개 카테고리 평균 비교)</h3>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>영역</th>
+              <th>기준평균</th>
+              <th>학생평균</th>
+              <th>비교</th>
+            </tr>
+          </thead>
+          <tbody id="compareBody"></tbody>
+        </table>
+      </div>
+      
+    <div class="progress">
+      <div id="progressFill"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="box">
+        <div class="box-title">수학 영역별 분석</div>
+        <canvas id="radarDomain" width="420" height="320"></canvas>
+        <table class="mini" id="catTable">
+          <thead>
+            <tr>
+              <th>영역</th><th>득점</th><th>배점</th><th>%</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="box">
+        <div class="box-title">문제해결능력 분석 </div>
+        <canvas id="radarSkill" width="420" height="320"></canvas>
+        <table class="mini" id="skillTable">
+          <thead>
+            <tr>
+              <th>능력</th><th>득점</th><th>평가</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="comment-box">
+      <h3>종합평가</h3>
+      <p id="overallOut"></p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
