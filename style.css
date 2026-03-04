@@ -201,6 +201,9 @@ canvas{
 .mini tr:last-child td{ border-bottom:0; }
 
 .comment-box{
+  white-space: pre-line;
+  word-break: break-word;
+  overflow-wrap: break-word;
   margin-top:12px;
   border:1px solid var(--line);
   border-radius:12px;
@@ -282,13 +285,7 @@ canvas{
     page-break-inside: avoid;
   }
 
-  /* 캔버스 크기를 인쇄에서 고정(너무 커지거나 찌그러지는 문제 방지) */
-  canvas{
-    width: 100% !important;
-    height: 55mm !important;          /* 스샷처럼 높이 */
-    border: 1px solid #e5e7eb !important;
-    border-radius: 12px !important;
-  }
+
 
   /* 표 폰트/간격 */
   .mini th, .mini td{
@@ -304,6 +301,7 @@ canvas{
   .comment-box h3{ font-size: 13px !important; }
   .comment-box p{ font-size: 11.5px !important; }
 
+  
   /* 색상 인쇄 허용 */
   *{
     -webkit-print-color-adjust: exact;
@@ -420,4 +418,76 @@ canvas{
   background:#2563eb;
   border-radius:6px;
   transition:width .4s;
+}
+
+.semester-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  margin-top:10px;
+}
+
+.semester-card{
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  padding:14px;
+  background:white;
+  text-align:center;
+
+  box-sizing:border-box;
+}
+.semester-title{
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.semester-card canvas{
+  width:100%;
+  height:180px;
+}
+
+@media print{
+
+  .semester-grid{
+    display:grid !important;
+    grid-template-columns:1fr 1fr 1fr !important;
+    gap:6mm !important;
+    margin-top:10mm !important;
+    break-inside:avoid;
+    align-items:start;
+
+  }
+
+  .semester-card{
+    padding:8px !important;
+    border:1px solid #e5e7eb !important;
+    break-inside:avoid;
+    page-break-inside:avoid;
+    align-items: start;
+  }
+
+  .semester-card canvas{
+    height: 45mm !important;
+  }
+    /* 캔버스 크기를 인쇄에서 고정(너무 커지거나 찌그러지는 문제 방지) */
+  canvas{
+    width:100% !important;
+    height:auto !important;
+  }
+
+}
+
+@media print {
+
+#reportArea{
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:14px;
+  margin:6mm 0;
+  page-break-inside:auto;
+    display:block;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
 }

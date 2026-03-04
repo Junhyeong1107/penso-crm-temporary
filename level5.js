@@ -23,24 +23,27 @@ const BASE_AVG = {
 
 // ===== 문항 하드코딩 =====
 
+// ===== 문항 하드코딩 =====
+
 const QUESTIONS = [
 
-{pts:5,domains:["연산"]},           // 1
-{pts:7,domains:["연산"]},           // 2
-{pts:5,domains:["도형","연산"]},    // 3
-{pts:6,domains:["도형","규칙논리"]},    // 4
-{pts:7,domains:["연산","규칙논리"]},    // 5
-{pts:5,domains:["연산"]},           // 6    
-{pts:7,domains:["연산","도형","측정"]},   // 7
-{pts:6,domains:["도형"]},               // 8
-{pts:7,domains:["측정"]},               // 9
-{pts:6,domains:["규칙논리"]},    // 10
-{pts:7,domains:["연산"]},
-{pts:5,domains:["연산"]},
-{pts:7,domains:["도형"]},
-{pts:7,domains:["연산"]},
-{pts:6,domains:["도형","측정"]},
-{pts:7,domains:["도형","규칙논리"]}
+{pts:5,domains:["연산"], semester:1},           // 1
+{pts:7,domains:["연산"], semester:1},           // 2
+{pts:5,domains:["도형","연산"], semester:1},    // 3
+{pts:6,domains:["도형","규칙논리"], semester:1},    // 4
+{pts:7,domains:["연산","규칙논리"], semester:1},    // 5
+{pts:5,domains:["연산"], semester:1},           // 6    
+{pts:7,domains:["연산","도형","측정"], semester:1},   // 7
+{pts:6,domains:["도형"], semester:1},               // 8
+{pts:7,domains:["측정"], semester:1},               // 9
+{pts:6,domains:["규칙논리"], semester:1},    // 10
+
+{pts:7,domains:["연산"], semester:2},           // 11
+{pts:5,domains:["연산"], semester:2},           // 12
+{pts:7,domains:["도형"], semester:2},           // 13
+{pts:7,domains:["연산"], semester:2},           // 14
+{pts:6,domains:["도형","측정"], semester:2},     // 15
+{pts:7,domains:["도형","규칙논리"], semester:2}  // 16
 
 ];
 
@@ -60,6 +63,9 @@ function pensoGrade(p){
   if(p>=40) return "펜소 L";
   return "펜소 P";
 }
+
+// 기본 날짜
+document.getElementById("testDate").valueAsDate = new Date();
 
 function n(v){ return Number.isFinite(v)?v:0; }
 
@@ -273,6 +279,11 @@ const totalPts=qs.reduce((a,q)=>a+q.pts,0);
 const totalScore=qs.reduce((a,q)=>a+q.score,0);
 
 const score100=(totalScore/totalPts)*100;
+  // 상단 메타
+  const name = (document.getElementById("studentName").value || "").trim();
+  const cls  = (document.getElementById("studentClass").value || "").trim();
+  const date = document.getElementById("testDate").value || "";
+  document.getElementById("meta").innerText = [date, name, cls].filter(Boolean).join(" · ");
 
 document.getElementById("totalScoreTxt").innerText=
 `${totalScore} / ${totalPts}`;
@@ -435,20 +446,205 @@ tr.innerHTML=`
 compareBody.appendChild(tr);
 
 });
+// ===== 학기 성취도 계산 =====
+
+const semesterAgg = {
+  1:{score:0,max:0},
+  2:{score:0,max:0}
+};
+
+qs.forEach((q,i)=>{
+
+  const meta = QUESTIONS[i];
+
+  const correct = q.score>0 ? 1:0;
+
+  semesterAgg[meta.semester].score += correct;
+  semesterAgg[meta.semester].max += 1;
+
+});
+
+const semester1Percent =
+semesterAgg[1].max ? semesterAgg[1].score/semesterAgg[1].max*100 : 0;
+
+const semester2Percent =
+semesterAgg[2].max ? semesterAgg[2].score/semesterAgg[2].max*100 : 0;
+
+const semesterTotalPercent =
+(semester1Percent + semester2Percent) / 2;
+
+
+// ===== 학년 평균 (임시값) =====
+
+const avgSemester1 = 70;
+const avgSemester2 = 68;
+const avgTotal = (avgSemester1 + avgSemester2)/2;
+
+
+// ===== 세로막대 그래프 출력 =====
+
+drawSemesterBar("sem1Chart", semester1Percent, avgSemester1);
+
+drawSemesterBar("sem2Chart", semester2Percent, avgSemester2);
+
+drawSemesterBar("semTotalChart", semesterTotalPercent, avgTotal);
+
+// ===== 학기 세로막대 그래프 =====
+
+function drawSemesterBar(canvasId, student, avg){
+
+const canvas = document.getElementById(canvasId);
+if(!canvas) return;
+
+const ctx = canvas.getContext("2d");
+
+const width = canvas.clientWidth || 220;
+const height = canvas.clientHeight || 180;
+
+const dpr = window.devicePixelRatio || 1;
+
+canvas.width = width * dpr;
+canvas.height = height * dpr;
+
+ctx.scale(dpr, dpr);
+ctx.clearRect(0,0,width,height);
+
+const base = height - 35;
+const maxHeight = height - 60;
+
+const studentHeight = maxHeight * (student/100);
+const avgHeight = maxHeight * (avg/100);
+
+const barWidth = 30;
+
+const studentX = width*0.35;
+const avgX = width*0.65;
+
+ctx.font = "700 12px system-ui";
+ctx.textAlign = "center";
+
+
+// ===== 기준선 =====
+
+ctx.strokeStyle = "#e5e7eb";
+ctx.lineWidth = 1;
+
+for(let i=0;i<=4;i++){
+
+const y = base - (maxHeight/4)*i;
+
+ctx.beginPath();
+ctx.moveTo(width*0.15,y);
+ctx.lineTo(width*0.85,y);
+ctx.stroke();
 
 }
 
+
+// ===== 둥근 막대 함수 =====
+
+function roundRect(x,y,w,h,r){
+
+ctx.beginPath();
+
+ctx.moveTo(x+r,y);
+ctx.lineTo(x+w-r,y);
+ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+
+ctx.lineTo(x+w,y+h);
+ctx.lineTo(x,y+h);
+
+ctx.lineTo(x,y+r);
+ctx.quadraticCurveTo(x,y,x+r,y);
+
+ctx.closePath();
+ctx.fill();
+
+}
+
+
+// ===== 학생 막대 =====
+
+const gradStudent = ctx.createLinearGradient(0,base-studentHeight,0,base);
+gradStudent.addColorStop(0,"#3b82f6");
+gradStudent.addColorStop(1,"#2563eb");
+
+ctx.fillStyle = gradStudent;
+
+roundRect(
+studentX-barWidth/2,
+base-studentHeight,
+barWidth,
+studentHeight,
+6
+);
+
+
+// ===== 평균 막대 =====
+
+const gradAvg = ctx.createLinearGradient(0,base-avgHeight,0,base);
+gradAvg.addColorStop(0,"#cbd5f5");
+gradAvg.addColorStop(1,"#9ca3af");
+
+ctx.fillStyle = gradAvg;
+
+roundRect(
+avgX-barWidth/2,
+base-avgHeight,
+barWidth,
+avgHeight,
+6
+);
+
+
+// ===== 점수 표시 =====
+
+ctx.fillStyle = "#111827";
+ctx.font = "700 14px system-ui";
+
+ctx.fillText(student.toFixed(0)+"%", studentX, base-studentHeight-6);
+ctx.fillText(avg.toFixed(0)+"%", avgX, base-avgHeight-6);
+
+
+// ===== 라벨 =====
+
+ctx.font = "700 14px system-ui";
+ctx.fillStyle = "#374151";
+
+ctx.fillText("학생점수", studentX, height-10);
+ctx.fillText("원생평균", avgX, height-10);
+
+}
+// 코멘트 출력
+  document.getElementById("overallOut").innerText =
+    (document.getElementById("commentOverall").value || "").trim();
+}
+
 // ===== 버튼 =====
-
-document.getElementById("btnCalc").addEventListener("click",calc);
-
-document.getElementById("btnPrint").addEventListener("click",()=>{
-calc();
-window.print();
+document.getElementById("btnCalc").addEventListener("click", () => {
+  calc();
+  document.getElementById("reportArea").scrollIntoView({behavior:"smooth", block:"start"});
 });
 
-document.getElementById("btnReset").addEventListener("click",()=>{
-location.reload();
+document.getElementById("btnPrint").addEventListener("click", () => {
+  calc();
+  window.print();
+});
+
+document.getElementById("btnReset").addEventListener("click", () => {
+  document.getElementById("studentName").value = "";
+  document.getElementById("studentClass").value = "";
+  document.getElementById("testDate").valueAsDate = new Date();
+  document.getElementById("commentOverall").value = "";
+
+  for(let i=1;i<=16;i++){
+    document.querySelector(`.pts[data-q="${i}"]`).value = "1";
+    document.querySelector(`.score[data-q="${i}"]`).value = "0";
+    document.querySelector(`.domain[data-q="${i}"]`).value = DOMAINS[0];
+  }
+  calc();
 });
 
 calc();
+
+

@@ -41,7 +41,7 @@
       <button id="btnPrint">인쇄</button>
       <button id="btnReset">초기화</button>
     </div>
-  </div>
+</div>
 
   <!-- 결과 -->
   <div class="panel" id="reportArea">
@@ -60,7 +60,6 @@
           <div class="kpi-value"><span id="percentTxt">0</span></div>
         </div>
       </div>
-
     </div>
       <div class="panel compare-panel">
         <h3>수학 영역별 성취도</h3>
@@ -110,11 +109,30 @@
       </div>
     </div>
 
-    <div class="comment-box">
-      <h3>종합평가</h3>
-      <p id="overallOut"></p>
-    </div>
+<div class="semester-grid">
+
+  <div class="semester-card">
+    <div class="semester-title">1학기</div>
+    <canvas id="sem1Chart"></canvas>
+  </div>
+
+  <div class="semester-card">
+    <div class="semester-title">2학기</div>
+    <canvas id="sem2Chart"></canvas>
+  </div>
+
+  <div class="semester-card">
+    <div class="semester-title">학년 전체</div>
+    <canvas id="semTotalChart"></canvas>
+  </div>
 </div>
+        <div class="comment-box">
+        <h3>종합평가</h3>
+        <p id="overallOut"></p>
+        </div>
+</div>
+
+
 
 <script src="level5.js"></script>
 </body>
