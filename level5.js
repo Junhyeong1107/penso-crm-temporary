@@ -437,8 +437,8 @@ tr.innerHTML=`
 <td>${base}</td>
 <td>
 <div class="bar-wrap">
-<div class="bar-base" style="width:${base}%"></div>
 <div class="bar-student" style="width:${student}%"></div>
+<div class="bar-base" style="width:${base}%"></div>
 </div>
 </td>
 `;
@@ -646,7 +646,5 @@ document.getElementById("btnReset").addEventListener("click", () => {
 });
 
 calc();
-
-
 
 
