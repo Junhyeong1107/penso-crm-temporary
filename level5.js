@@ -50,17 +50,17 @@ const QUESTIONS = [
 // ===== 유틸 =====
 
 function skillLevel(p){
-  if(p>=75) return "매우우수";
-  if(p>=60) return "우수";
-  if(p>=45) return "보통";
-  if(p>=30) return "보완필요";
+  if(p>=85) return "매우우수";
+  if(p>=70) return "우수";
+  if(p>=50) return "보통";
+  if(p>=40) return "보완필요";
   return "집중보완";
 }
 
 function pensoGrade(p){
-  if(p>=80) return "펜소 T";
-  if(p>=60) return "펜소 D";
-  if(p>=40) return "펜소 L";
+  if(p>=85) return "펜소 T";
+  if(p>=70) return "펜소 D";
+  if(p>=45) return "펜소 L";
   return "펜소 P";
 }
 
@@ -646,5 +646,6 @@ document.getElementById("btnReset").addEventListener("click", () => {
 });
 
 calc();
+
 
 
