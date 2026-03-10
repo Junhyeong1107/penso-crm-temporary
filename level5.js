@@ -433,12 +433,12 @@ const tr=document.createElement("tr");
 
 tr.innerHTML=`
 <td>${d}</td>
-<td>${student.toFixed(1)}</td>
 <td>${base}</td>
+<td>${student.toFixed(1)}</td>
 <td>
 <div class="bar-wrap">
-<div class="bar-student" style="width:${student}%"></div>
 <div class="bar-base" style="width:${base}%"></div>
+<div class="bar-student" style="width:${student}%"></div>
 </div>
 </td>
 `;
@@ -646,5 +646,6 @@ document.getElementById("btnReset").addEventListener("click", () => {
 });
 
 calc();
+
 
 
